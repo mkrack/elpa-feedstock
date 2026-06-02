@@ -16,9 +16,9 @@ tests=(
 # MPI setup
 if [[ "${mpi}" != "nompi" ]]; then
   MPI=yes
-    export CC="mpicc"
-    export CXX="mpicxx"
-    export FC="mpifort"
+  export CC="${PREFIX}/bin/mpicc"
+  export CXX="${PREFIX}/bin/mpicxx"
+  export FC="${PREFIX}/bin/mpifort"
 else
   MPI=no
 fi
