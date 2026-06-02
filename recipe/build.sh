@@ -16,20 +16,9 @@ tests=(
 # MPI setup
 if [[ "${mpi}" != "nompi" ]]; then
   MPI=yes
-  if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
-    # Cross-compilation: use real compilers
-    export MPICH_CC="${CC}"
-    export MPICH_CXX="${CXX}"
-    export MPICH_FC="${FC}"
-    export OMPI_CC="${CC}"
-    export OMPI_CXX="${CXX}"
-    export OMPI_FC="${FC}"
-  else
-    # Native: use MPI wrappers
-    export CC="${PREFIX}/bin/mpicc"
-    export CXX="${PREFIX}/bin/mpicxx"
-    export FC="${PREFIX}/bin/mpifort"
-  fi
+    export CC="mpicc"
+    export CXX="mpicxx"
+    export FC="mpifort"
 else
   MPI=no
 fi
@@ -71,8 +60,7 @@ if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
   export ac_cv_prog_cxx_works=yes
   export ac_cv_prog_cc_works=yes
   export ac_cv_prog_fc_works=yes
-  export ac_cv_prog_cxx_cross=yes
-  export cross_compiling=yes
+  export ac_cv_search_MPI_Init="none required"
 fi
 
 # Ensure PREFIX visibility
@@ -111,7 +99,7 @@ popd
 # Build with OpenMP
 mkdir build_openmp
 pushd build_openmp
-
+ 
 ../configure --enable-openmp "${conf_options[@]}" || { cat config.log; exit 1; }
 
 make -j"${CPU_COUNT:-1}"

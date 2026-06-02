@@ -62,14 +62,14 @@ test:
     - pkg-config
   commands:
     # Library presence
-    - test -f "$PREFIX/lib/libelpa{{ elpa_suffix }}${SHLIB_EXT}"
-    - test -f "$PREFIX/lib/libelpa{{ elpa_suffix }}_openmp${SHLIB_EXT}"
+    - test -f "${PREFIX}/lib/lib{{ name }}{{ elpa_suffix }}${SHLIB_EXT}"
+    - test -f "${PREFIX}/lib/lib{{ name }}{{ elpa_suffix }}_openmp${SHLIB_EXT}"
     # pkg-config checks
-    - pkg-config --exists elpa{{ elpa_suffix }}
-    - pkg-config --exists elpa{{ elpa_suffix }}_openmp
+    - pkg-config --exists {{ name }}{{ elpa_suffix }}  # [build_platform == target_platform]
+    - pkg-config --exists {{ name }}{{ elpa_suffix }}_openmp  # [build_platform == target_platform]
     # Binary execution checks
-    - elpa2_print_kernels{{ elpa_suffix }}
-    - elpa2_print_kernels{{ elpa_suffix }}_openmp
+    - {{ name }}2_print_kernels{{ elpa_suffix }}  # [build_platform == target_platform]
+    - {{ name }}2_print_kernels{{ elpa_suffix }}_openmp  # [build_platform == target_platform]
 
 about:
   home: https://elpa.mpcdf.mpg.de/
