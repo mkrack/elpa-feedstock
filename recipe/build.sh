@@ -47,7 +47,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 else
   if [[ "${target_platform}" == "linux-64" ]]; then
     export CFLAGS="${CFLAGS} -mavx2 -mfma"
-    export FCFLAGS="${FCLAGS} -mavx2 -mfma"
+    export FCFLAGS="${FCFLAGS} -mavx2 -mfma"
   else
     conf_extra="--disable-sse-assembly --disable-avx2 --disable-avx --disable-sse"
   fi
@@ -83,6 +83,9 @@ if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
     "ax_cv_mpicxx_works=yes"
     "ax_cv_mpicc_works=yes"
     "ax_cv_mpifort_works=yes"
+    "ac_cv_c_extc99=yes"
+    "ac_cv_c_extc11=yes"
+    "ac_cv_cxx_extcxx11=yes"
     "ac_cv_c_compiler_gnu=yes"
     "ac_cv_cxx_compiler_gnu=yes"
     "ac_cv_c_compiler_works=yes"
