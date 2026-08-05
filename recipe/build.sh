@@ -83,6 +83,11 @@ if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
     "ax_cv_mpicxx_works=yes"
     "ax_cv_mpicc_works=yes"
     "ax_cv_mpifort_works=yes"
+    "ac_cv_c_compiler_gnu=yes"
+    "ac_cv_cxx_compiler_gnu=yes"
+    "ac_cv_c_compiler_works=yes"
+    "ac_cv_cxx_compiler_works=yes"
+    "ac_cv_fc_compiler_works=yes"
   )
   if [[ "${mpi}" == "openmpi" ]]; then
     conf_options+=(
