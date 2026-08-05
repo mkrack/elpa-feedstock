@@ -1,5 +1,5 @@
 {% set name = "elpa" %}
-{% set version = "2026.02.001" %}
+{% set version = "2026.02.002" %}
 {% set build = 0 %}
 
 {% if mpi == "nompi" %}
@@ -17,7 +17,7 @@ package:
 
 source:
   url: https://elpa.mpcdf.mpg.de/software/tarball-archive/Releases/{{ version }}/{{ name }}-{{ version }}.tar.gz
-  sha256: a379f27f4dbd27b2ee45017afec656d064301e97150c874649bdfd64957b75ed
+  sha256: 02e3c59fec53cd8eb66a4cc15fa4fbf190cf9654227223fb8ad55713e9427932
   patches:
     - check_thread_affinity.patch
     - includedir-suffix.patch
