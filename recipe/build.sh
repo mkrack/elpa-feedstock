@@ -55,28 +55,6 @@ else
   export FORTRAN_CPP="${CPP:-cpp} -P -traditional"
 fi
 
-# Cross-compilation fixes
-if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
-  export ac_cv_prog_cxx_works=yes
-  export ac_cv_prog_cc_works=yes
-  export ac_cv_prog_fc_works=yes
-  export ac_cv_search_MPI_Init="none required"
-  if [[ "${mpi}" == "openmpi" ]]; then
-    # Bypass execution checks for Autoconf compiler sanity macro blocks
-    export ac_cv_env_CC_set=set
-    export ac_cv_env_CXX_set=set
-    export ac_cv_env_FC_set=set
-    # Bypass PMIX / PRRTE sub-module test suite executions inside OpenMPI wrappers
-    export pmix_cv_func_malloc_0_nonnull=yes
-    export prrte_cv_func_malloc_0_nonnull=yes
-    export ompi_cv_fortran_have_openmp=no
-    # Tell configure to assume standard cross-linking works without execution test
-    export ompi_cv_c_compiler_works=yes
-    export ompi_cv_cxx_compiler_works=yes
-    export ompi_cv_fortran_compiler_works=yes
-  fi
-fi
-
 # Ensure PREFIX visibility
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 export FCFLAGS="${FCFLAGS} -I${PREFIX}/include"
@@ -94,6 +72,28 @@ conf_options=(
   "--with-mpi=${MPI}"
   "--disable-avx512"
 )
+
+# Cross-compilation fixes
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
+  conf_options+=(
+    "ac_cv_prog_cxx_works=yes"
+    "ac_cv_prog_cc_works=yes"
+    "ac_cv_prog_fc_works=yes"
+    "ac_cv_search_MPI_Init=none required"
+    "ax_cv_mpicxx_works=yes"
+    "ax_cv_mpicc_works=yes"
+    "ax_cv_mpifort_works=yes"
+  )
+  if [[ "${mpi}" == "openmpi" ]]; then
+    conf_options+=(
+      "ompi_cv_c_compiler_works=yes"
+      "ompi_cv_cxx_compiler_works=yes"
+      "ompi_cv_fortran_compiler_works=yes"
+      "pmix_cv_func_malloc_0_nonnull=yes"
+      "prrte_cv_func_malloc_0_nonnull=yes"
+    )
+  fi
+fi
 
 if [[ -n "${conf_extra}" ]]; then
   conf_options+=(${conf_extra})
