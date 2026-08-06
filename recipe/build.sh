@@ -15,12 +15,12 @@ tests=(
 
 # MPI setup
 if [[ "${mpi}" != "nompi" ]]; then
-  MPI=yes
+  MPI="yes"
   export CC="${PREFIX}/bin/mpicc"
   export CXX="${PREFIX}/bin/mpicxx"
   export FC="${PREFIX}/bin/mpifort"
 else
-  MPI=no
+  MPI="no"
 fi
 
 # OpenMPI CI stabilization
@@ -35,29 +35,28 @@ conf_extra=""
 if [[ "$(uname)" == "Darwin" ]]; then
   if [[ "${target_platform}" == "osx-arm64" ]]; then
     export CFLAGS="${CFLAGS} -fno-lto"
-    export FCFLAGS="${FCFLAGS} -fno-lto"
+    export FFLAGS="${FFLAGS} -fno-lto"
     export CXXFLAGS="${CXXFLAGS} -fno-lto"
     conf_extra="--disable-sse-assembly --disable-avx2 --disable-avx --disable-sse"
   else
     export CFLAGS="${CFLAGS} -mavx"
-    export FCLAGS="${FCLAGS} -mavx"
+    export FFLAGS="${FFLAGS} -mavx"
     conf_extra="--disable-sse-assembly --disable-avx2"
   fi
   export FORTRAN_CPP="${FC:-gfortran} -E -P -cpp"
 else
   if [[ "${target_platform}" == "linux-64" ]]; then
     export CFLAGS="${CFLAGS} -mavx2 -mfma"
-    export FCFLAGS="${FCFLAGS} -mavx2 -mfma"
+    export FFLAGS="${FFLAGS} -mavx2 -mfma"
   else
     conf_extra="--disable-sse-assembly --disable-avx2 --disable-avx --disable-sse"
   fi
-
   export FORTRAN_CPP="${CPP:-cpp} -P -traditional"
 fi
 
 # Ensure PREFIX visibility
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
-export FCFLAGS="${FCFLAGS} -I${PREFIX}/include"
+export FFLAGS="${FFLAGS} -I${PREFIX}/include"
 export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib"
 
 if [[ "${MPI}" == "yes" ]]; then
@@ -76,31 +75,8 @@ conf_options=(
 # Cross-compilation fixes
 if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
   conf_options+=(
-    "ac_cv_prog_cxx_works=yes"
-    "ac_cv_prog_cc_works=yes"
-    "ac_cv_prog_fc_works=yes"
-    "ac_cv_search_MPI_Init=none required"
-    "ax_cv_mpicxx_works=yes"
-    "ax_cv_mpicc_works=yes"
-    "ax_cv_mpifort_works=yes"
-    "ac_cv_c_extc99=yes"
-    "ac_cv_c_extc11=yes"
-    "ac_cv_cxx_extcxx11=yes"
-    "ac_cv_c_compiler_gnu=yes"
-    "ac_cv_cxx_compiler_gnu=yes"
-    "ac_cv_c_compiler_works=yes"
-    "ac_cv_cxx_compiler_works=yes"
-    "ac_cv_fc_compiler_works=yes"
+    "cross_compiling=yes"
   )
-  if [[ "${mpi}" == "openmpi" ]]; then
-    conf_options+=(
-      "ompi_cv_c_compiler_works=yes"
-      "ompi_cv_cxx_compiler_works=yes"
-      "ompi_cv_fortran_compiler_works=yes"
-      "pmix_cv_func_malloc_0_nonnull=yes"
-      "prrte_cv_func_malloc_0_nonnull=yes"
-    )
-  fi
 fi
 
 if [[ -n "${conf_extra}" ]]; then
