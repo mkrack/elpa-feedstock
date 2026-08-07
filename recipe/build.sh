@@ -23,7 +23,7 @@ else
   MPI="no"
 fi
 
-# OpenMPI CI stabilization
+# OpenMPI specific setup
 if [[ "${mpi}" == "openmpi" ]]; then
   export OMPI_MCA_plm=isolated
   export OMPI_MCA_btl_vader_single_copy_mechanism=none
@@ -55,6 +55,7 @@ else
 fi
 
 # Ensure PREFIX visibility
+export CFLAGS="${CFLAGS} -I${PREFIX}/include"
 export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 export FFLAGS="${FFLAGS} -I${PREFIX}/include"
 export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib"
@@ -70,18 +71,8 @@ conf_options=(
   "--host=${HOST}"
   "--with-mpi=${MPI}"
   "--disable-avx512"
+  ${conf_extra:-}
 )
-
-# Cross-compilation fixes
-if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
-  conf_options+=(
-    "cross_compiling=yes"
-  )
-fi
-
-if [[ -n "${conf_extra}" ]]; then
-  conf_options+=(${conf_extra})
-fi
 
 # Build without OpenMP
 mkdir build
