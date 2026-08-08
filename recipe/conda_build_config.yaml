@@ -1,4 +1,10 @@
 mpi:
   - nompi
   - mpich
-  - openmpi
+  - openmpi [not (osx and arm64)]
+
+mpich:
+  - 5
+
+openmpi:
+  - 5
