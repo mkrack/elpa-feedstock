@@ -1,0 +1,96 @@
+schema_version: 1
+
+context:
+  name: "elpa"
+  version: "2026.02.002"
+  elpa_suffix: ${{ "_onenode" if mpi == "nompi" else "" }}
+  mpi_prefix: ${{ "nompi" if mpi == "nompi" else "mpi_" + mpi }}
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  url: https://elpa.mpcdf.mpg.de/software/tarball-archive/Releases/${{ version }}/${{ name }}-${{ version }}.tar.gz
+  sha256: 02e3c59fec53cd8eb66a4cc15fa4fbf190cf9654227223fb8ad55713e9427932
+  patches:
+    - check_thread_affinity.patch
+    - includedir-suffix.patch
+    - pkgconf.patch
+
+build:
+  number: ${{ 1 + (100 if mpi == "nompi" else 0) }}
+  skip:
+    # - osx and arm64 and mpi == "openmpi"
+    - win
+  string: mpi_${{ mpi }}_h${{ hash }}_${{ build_number }}
+
+requirements:
+  build:
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - ${{ compiler("fortran") }}
+    - if: unix
+      then: gnuconfig
+    - make
+    - perl
+    - pkg-config
+  host:
+    - if: mpi != "nompi"
+      then:
+        - ${{ mpi }}
+        - scalapack
+    - _openmp_mutex
+    - libblas
+    - liblapack
+    - "libopenblas * *openmp*"
+  run:
+    - if: mpi != "nompi"
+      then:
+        - ${{ mpi }}
+        - scalapack
+    - _openmp_mutex
+    - libblas
+    - liblapack
+    - "libopenblas * *openmp*"
+
+tests:
+  - package_contents:
+      lib:
+        - ${{ name }}${{ elpa_suffix }}
+        - ${{ name }}${{ elpa_suffix }}_openmp
+  - script:
+      - if: target_platform == build_platform
+        then:
+          # pkg-config checks
+          - pkg-config --exists ${{ name }}${{ elpa_suffix }}
+          - pkg-config --exists ${{ name }}${{ elpa_suffix }}_openmp
+          # Binary execution checks
+          - ${{ name }}2_print_kernels${{ elpa_suffix }}
+          - ${{ name }}2_print_kernels${{ elpa_suffix }}_openmp
+
+about:
+  homepage: https://elpa.mpcdf.mpg.de/
+  license: LGPL-3.0-only
+  license_file:
+    - LICENSE
+    - COPYING/COPYING
+    - COPYING/gpl.txt
+    - COPYING/lgpl.txt
+  summary: Eigenvalue Solvers for Petaflop-Applications
+  description: |
+    The computation of selected or all eigenvalues and eigenvectors of a symmetric
+    (Hermitian) matrix has high relevance for various scientific disciplines.
+    For the calculation of a significant part of the eigensystem typically direct
+    eigensolvers are used. For large problems, the eigensystem calculations with
+    existing solvers can become the computational bottleneck.
+  documentation: https://elpa.mpcdf.mpg.de/documentation/
+  repository: https://gitlab.mpcdf.mpg.de/elpa/elpa
+
+extra:
+  recipe-maintainers:
+    - jan-janssen
+    - awvwgk
+    - yuzie007
+    - mkrack
