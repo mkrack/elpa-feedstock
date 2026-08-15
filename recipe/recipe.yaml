@@ -54,6 +54,7 @@ requirements:
     - libblas
     - liblapack
     - "libopenblas * *openmp*"
+    - pkg-config
 
 tests:
   - package_contents:
