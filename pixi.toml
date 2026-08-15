@@ -163,15 +163,6 @@ description = "Build elpa-feedstock with variant osx_arm64_mpinompi directly (wi
 [feature.build.tasks."inspect-osx_arm64_mpinompi"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_mpinompi.yaml"
 description = "List contents of elpa-feedstock packages built for variant osx_arm64_mpinompi"
-[feature.build.tasks."build-osx_arm64_mpiopenmpi"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_mpiopenmpi.yaml"
-description = "Build elpa-feedstock with variant osx_arm64_mpiopenmpi directly (without setup scripts)"
-[feature.build.tasks."debug-osx_arm64_mpiopenmpi"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_mpiopenmpi.yaml"
-description = "Build elpa-feedstock with variant osx_arm64_mpiopenmpi directly (without setup scripts)"
-[feature.build.tasks."inspect-osx_arm64_mpiopenmpi"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_mpiopenmpi.yaml"
-description = "List contents of elpa-feedstock packages built for variant osx_arm64_mpiopenmpi"
 
 [environments]
 build = ["build"]
