@@ -1,10 +1,18 @@
 mpi:
   - nompi
   - mpich
-  - openmpi [not (osx and arm64)]
+  - openmpi
 
 mpich:
   - 5
 
 openmpi:
   - 5
+
+c_stdlib:
+  - sysroot                   # [linux]
+  - macosx_deployment_target  # [osx]
+
+c_stdlib_version:
+  - 2.28                      # [linux]
+  - 11.0                      # [osx]

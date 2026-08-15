@@ -19,7 +19,6 @@ For the calculation of a significant part of the eigensystem typically direct
 eigensolvers are used. For large problems, the eigensystem calculations with
 existing solvers can become the computational bottleneck.
 
-
 Current build status
 ====================
 
